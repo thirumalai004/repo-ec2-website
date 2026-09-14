@@ -1,37 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Web Page</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    background: #f5f5f5;
+    color: #222;
+  }
+  h1 {
+    text-align: center;
+  }
+  .upload-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  input[type="file"] {
+    margin-right: 10px;
+  }
+  button {
+    background: #2d6cdf;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button:hover {
+    background: #1f56b8;
+  }
+  button:disabled {
+    background: #999;
+    cursor: not-allowed;
+  }
+  #status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  #gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+  #gallery img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My Website -V7</h1>
-        <p>This is a simple HTML page. You can customize it with your own content.</p>
-    </div>
+
+  <h1>My Web Page</h1>
+
+  <div class="upload-box">
+    <input type="file" id="fileInput" accept="image/*">
+    <button id="uploadBtn" onclick="uploadFile()">Add</button>
+    <div id="status"></div>
+  </div>
+
+  <div id="gallery"></div>
+
+  <script>
+    // ---- Replace these two values with your own Cloudinary details ----
+    const CLOUD_NAME = 'uws1nhjc';
+    const UPLOAD_PRESET = 'LoGitWebCloud';
+    // ---------------------------------------------------------------
+
+    async function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const statusEl = document.getElementById('status');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        statusEl.textContent = 'Please select a file first.';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+
+      uploadBtn.disabled = true;
+      statusEl.textContent = 'Uploading...';
+
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+          { method: 'POST', body: formData }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Upload failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const img = document.createElement('img');
+        img.src = data.secure_url;
+        img.alt = file.name;
+        document.getElementById('gallery').prepend(img);
+
+        statusEl.textContent = 'Upload successful!';
+        fileInput.value = '';
+      } catch (error) {
+        console.error('Upload failed:', error);
+        statusEl.textContent = 'Upload failed. Check console for details.';
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    }
+  </script>
+
 </body>
 </html>
