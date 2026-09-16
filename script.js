@@ -3,9 +3,9 @@
 // (Cloudinary dashboard → Settings → Upload → Upload presets,
 // create an "Unsigned" preset)
 // ============================================================
-const CLOUDINARY_CLOUD_NAME = 'YOUR_CLOUD_NAME';
-const CLOUDINARY_UPLOAD_PRESET = 'YOUR_UNSIGNED_UPLOAD_PRESET';
-const CLOUDINARY_FOLDER = 'my-website/images'; // matches the diagram's target folder
+const CLOUDINARY_CLOUD_NAME = 'uws1nhjc';
+const CLOUDINARY_UPLOAD_PRESET = 'LoGitWebCloud';
+const CLOUDINARY_FOLDER = 'repo-ec2-website/images'; // matches the diagram's target folder
 
 // ============================================================
 // State (persisted to localStorage so it survives a refresh —
