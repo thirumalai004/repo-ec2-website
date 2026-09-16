@@ -1,0 +1,12 @@
+{
+  "name": "github-webhook-deploy-listener",
+  "version": "1.0.0",
+  "description": "Listens for GitHub push webhooks and auto-deploys to IIS wwwroot on Windows EC2",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
