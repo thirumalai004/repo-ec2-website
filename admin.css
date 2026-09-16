@@ -1,0 +1,168 @@
+.admin-badge {
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.admin-main { padding: 48px 0 96px; }
+
+.admin-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.admin-head h1 {
+  font-size: 1.9rem;
+  margin-bottom: 6px;
+}
+
+.admin-head p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.92rem;
+}
+
+.admin-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  min-width: 140px;
+}
+
+.stat-card .stat-value {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  color: var(--fern-dark);
+  display: block;
+}
+
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.admin-table-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  font-size: 0.92rem;
+}
+
+.admin-table tr:last-child td { border-bottom: none; }
+
+.admin-table img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #EFE9DA;
+  display: block;
+}
+
+.admin-table .desc-cell {
+  color: var(--ink-soft);
+  max-width: 240px;
+}
+
+.row-actions { display: flex; gap: 10px; }
+
+.row-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.edit-action { color: var(--fern-dark); }
+.edit-action:hover { text-decoration: underline; }
+
+.delete-action { color: var(--clay); }
+.delete-action:hover { text-decoration: underline; }
+
+.hint-text {
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-size: 0.8em;
+}
+
+.current-image-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -6px 0 16px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.current-image-preview img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.btn-danger {
+  background: var(--clay);
+  color: white;
+  border: none;
+}
+.btn-danger:hover { background: #9C5423; }
+
+.confirm-modal { text-align: left; }
+.confirm-body { padding: 20px 24px; }
+.confirm-body p { margin-top: 0; }
+.confirm-actions { display: flex; gap: 12px; margin-top: 20px; }
+.confirm-actions .btn { flex: 1; }
+
+@media (max-width: 700px) {
+  .admin-table thead { display: none; }
+  .admin-table, .admin-table tbody, .admin-table tr, .admin-table td {
+    display: block;
+    width: 100%;
+  }
+  .admin-table tr {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-table td {
+    border-bottom: none;
+    padding: 4px 0;
+  }
+  .admin-table .desc-cell { max-width: none; }
+}

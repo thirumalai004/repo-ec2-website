@@ -42,6 +42,30 @@ Without this, the "+ Add Image" button will show an error telling you to
 configure it — everything else (browsing, cart, checkout simulation) works
 immediately with the seeded sample plants.
 
+## Admin page
+
+`admin.html` is a lightweight management console — it acts like a backend
+for your product data, without an actual server behind it:
+
+- Lists every product in a table, with combined stats at the top
+- **Add product**: same Cloudinary upload as the storefront's "+ Add Image"
+- **Edit**: change name, price, description, or swap the photo (leave the
+  photo field blank to keep the current one)
+- **Remove**: deletes a product after a confirmation step
+
+It reads and writes the exact same `localStorage` data (`terraLeaf_products`)
+that `index.html` reads from, so any change you make in the admin page shows
+up on the storefront the next time it loads.
+
+Set the same `CLOUDINARY_CLOUD_NAME` and `CLOUDINARY_UPLOAD_PRESET` values
+in `admin.js` as you did in `script.js` — they're kept as separate constants
+so each file stays self-contained, but they should point at the same
+Cloudinary account.
+
+There's no login here — anyone with the URL can use it. That's fine for
+practicing the deploy pipeline, but not something to expose publicly on a
+real store without adding authentication first.
+
 ## Deploy it through your pipeline
 
 1. Commit these three files (plus this README) to your GitHub repo.
