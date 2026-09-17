@@ -1,62 +1,49 @@
-# Terra & Leaf — practice storefront
+# Thirumalai Selladurai — Portfolio (React)
 
-A plain HTML/CSS/JS shop (no build step) — drop it straight into
-`C:\inetpub\wwwroot` and IIS serves it as-is, matching your deploy pipeline.
+A single-page React portfolio built with Vite, styled as a technical "blueprint"
+inspired by cloud infrastructure diagrams.
 
-## What's in here
+## Edit your content
 
-- `index.html` — page structure
-- `style.css` — all styling
-- `script.js` — product rendering, cart, and the Cloudinary upload
+All resume content lives in one file: `src/data.js`.
+Open it and edit the text directly — no need to touch any component or CSS file.
 
-Products and cart contents are stored in the browser's `localStorage`, so
-this runs entirely client-side — no backend or database needed to practice
-the deploy flow.
+## Run it locally (optional, to preview before deploying)
 
-## Images
+```
+npm install
+npm run dev
+```
 
-The three seed products (`Fiddle Leaf Fig`, `Snake Plant`, `Monstera
-Deliciosa`) use original flat-illustration SVGs in the `images/` folder,
-styled to match the site's palette — no external image hosting or licensing
-to worry about. Keep this folder alongside `index.html` when you deploy.
-Any product added later through the "+ Add Image" button uploads a real
-photo to Cloudinary instead.
+Then open the local URL it prints (usually http://localhost:5173).
 
-## Set up Cloudinary (for the "+ Add Image" button)
+## Build for deployment
 
-1. Create a free account at https://cloudinary.com if you don't have one.
-2. From the dashboard, copy your **Cloud name**.
-3. Go to **Settings → Upload → Upload presets → Add upload preset**.
-4. Set **Signing Mode** to **Unsigned** (required — this demo uploads
-   directly from the browser with no server-side secret).
-5. Optionally set the preset's folder to `my-website/images` to match the
-   architecture diagram, or leave the folder override in `script.js` as is.
-6. Save the preset and copy its name.
-7. Open `script.js` and set:
-   ```js
-   const CLOUDINARY_CLOUD_NAME = 'your-cloud-name';
-   const CLOUDINARY_UPLOAD_PRESET = 'your-preset-name';
-   ```
+React needs to be "compiled" into plain HTML/CSS/JS before IIS can serve it,
+since IIS only serves static files, not React source code directly.
 
-Without this, the "+ Add Image" button will show an error telling you to
-configure it — everything else (browsing, cart, checkout simulation) works
-immediately with the seeded sample plants.
+```
+npm install
+npm run build
+```
 
-## Deploy it through your pipeline
+This creates a `dist/` folder containing the finished static site
+(`index.html`, `assets/*.css`, `assets/*.js`).
 
-1. Commit these three files (plus this README) to your GitHub repo.
-2. Push — your webhook listener on EC2 picks it up, runs `git pull` in
-   `C:\inetpub\wwwroot`, and recycles the IIS app pool.
-3. Visit the site's URL — new products you add will upload their photo to
-   Cloudinary and store the returned URL, so `wwwroot` itself never has to
-   hold the image files.
+## Deploy to your IIS server
 
-## Notes for practice/demo use only
+1. RDP into your EC2 instance.
+2. Open File Explorer → go to `C:\inetpub\wwwroot` (the IIS site's root folder).
+3. Delete the old contents of that folder (or back them up elsewhere).
+4. Copy the **entire contents of the `dist` folder** (not the folder itself —
+   its contents: `index.html` and the `assets` folder) into `C:\inetpub\wwwroot`.
+5. Visit `https://thiruprojects.online` — the site should load with the padlock
+   already active, since the SSL certificate is bound at the IIS site level.
 
-- Cart and product data live in the browser, so they're per-device and not
-  shared between visitors — fine for testing the pipeline, not for a real
-  store.
-- Checkout is simulated (just an alert) — there's no payment processing.
-- An unsigned upload preset means anyone with the preset name can upload to
-  that Cloudinary folder. Fine for practice; for production you'd sign
-  uploads server-side instead.
+## Making future edits
+
+Whenever you want to change any content:
+1. Edit `src/data.js` on your own PC.
+2. Run `npm run build` again.
+3. Copy the new `dist` contents to `C:\inetpub\wwwroot` on the server, overwriting
+   the old files.
