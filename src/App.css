@@ -1,0 +1,127 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f5f7fa;
+  color: #1e2a38;
+}
+
+.portfolio {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* ---- Hero ---- */
+.hero {
+  text-align: center;
+  padding: 70px 20px 50px;
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 6px;
+  color: #16324f;
+}
+
+.hero h2 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2f7fd1;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  max-width: 560px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+  color: #4a5a6a;
+}
+
+.hero button {
+  padding: 12px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #2f7fd1;
+  color: #fff;
+  cursor: pointer;
+}
+
+.hero button:hover {
+  background: #24659f;
+}
+
+/* ---- Sections ---- */
+section {
+  padding: 40px 0;
+  border-top: 1px solid #dfe6ee;
+}
+
+section h2 {
+  font-size: 1.5rem;
+  color: #16324f;
+  margin-bottom: 16px;
+}
+
+section p {
+  line-height: 1.6;
+  color: #4a5a6a;
+}
+
+/* ---- Skills ---- */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skills span {
+  background: #e8f0fb;
+  color: #2f7fd1;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* ---- Projects ---- */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.project {
+  background: #fff;
+  border: 1px solid #e0e6ec;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.project h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: #16324f;
+}
+
+.project-date {
+  font-size: 0.8rem;
+  color: #8b98a5;
+  margin: 0 0 10px;
+}
+
+.project p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ---- Footer ---- */
+footer {
+  text-align: center;
+  padding: 30px 0 0;
+  color: #8b98a5;
+  font-size: 0.9rem;
+}
