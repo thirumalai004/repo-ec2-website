@@ -3,81 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EC2 Frontend + Backend Test</title>
+  <title>Frontend + Backend + Database Demo</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 60px auto;
-      padding: 20px;
-      background: #f5f5f5;
-    }
-    h1 {
-      color: #222;
-    }
-    #result {
-      margin-top: 20px;
-      padding: 16px;
-      background: white;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 18px;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    button:hover {
-      background: #1d4ed8;
-    }
-    .status {
-      font-size: 13px;
-      color: #666;
-      margin-top: 8px;
-    }
-    .error {
-      color: #dc2626;
-    }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 60px auto; padding: 20px; background: #f5f5f5; }
+    h1 { color: #222; }
+    input { padding: 10px; width: 70%; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 10px 18px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    ul { list-style: none; padding: 0; margin-top: 20px; }
+    li { background: white; padding: 12px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #ddd; }
+    .status { font-size: 13px; color: #666; margin-top: 8px; }
+    .error { color: #dc2626; }
   </style>
 </head>
 <body>
-  <h1>EC2 Frontend + Backend Demo V1</h1>
-  <p>This page calls your Node.js backend through IIS's reverse proxy at <strong>thiruprojects.online</strong>.</p>
+  <h1>Messages (stored in a real database)</h1>
+  <p>Type something, save it, and see it come back from SQLite through your backend.</p>
 
-  <button onclick="callBackend()">Call Backend API</button>
-  <div id="result">Click the button to test the API.</div>
+  <input type="text" id="msgInput" placeholder="Type a message...">
+  <button onclick="addMessage()">Save</button>
   <div class="status" id="status"></div>
 
-  <script>
-    async function callBackend() {
-      const resultDiv = document.getElementById('result');
-      const statusDiv = document.getElementById('status');
-      resultDiv.textContent = 'Loading...';
-      statusDiv.textContent = '';
-      statusDiv.className = 'status';
+  <ul id="messageList"></ul>
 
+  <script>
+    // Step 3-5: fetch data from backend (which hits the DB) and update the DOM
+    async function loadMessages() {
+      const statusDiv = document.getElementById('status');
       try {
-        const response = await fetch('/api/hello');
-        if (!response.ok) {
-          throw new Error(`Server responded with status ${response.status}`);
-        }
-        const data = await response.json();
-        resultDiv.textContent = data.message;
-        statusDiv.textContent = 'Success — backend reached via /api/hello';
+        const response = await fetch('/api/messages');
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const messages = await response.json();
+
+        const list = document.getElementById('messageList');
+        list.innerHTML = '';
+        messages.forEach(msg => {
+          const li = document.createElement('li');
+          li.textContent = `${msg.text} — ${new Date(msg.created_at).toLocaleString()}`;
+          list.appendChild(li);
+        });
+        statusDiv.textContent = `Loaded ${messages.length} message(s) from the database.`;
+        statusDiv.className = 'status';
       } catch (err) {
-        resultDiv.textContent = 'Failed to reach backend.';
-        statusDiv.textContent = 'Error: ' + err.message;
+        statusDiv.textContent = 'Error loading messages: ' + err.message;
         statusDiv.className = 'status error';
       }
     }
 
-    // Auto-call on page load so you can verify immediately
-    window.addEventListener('DOMContentLoaded', callBackend);
+    // Step 1-2: user clicks, fetch() sends a POST request
+    async function addMessage() {
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      try {
+        const response = await fetch('/api/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+
+        input.value = '';
+        await loadMessages(); // refresh the list after saving
+      } catch (err) {
+        document.getElementById('status').textContent = 'Error saving message: ' + err.message;
+      }
+    }
+
+    // Load existing messages when the page opens
+    window.addEventListener('DOMContentLoaded', loadMessages);
   </script>
 </body>
 </html>
