@@ -3,58 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frontend + Backend + Database Demo</title>
+  <title>Save a Message</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 600px; margin: 60px auto; padding: 20px; background: #f5f5f5; }
     h1 { color: #222; }
     input { padding: 10px; width: 70%; border: 1px solid #ccc; border-radius: 6px; }
     button { padding: 10px 18px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
     button:hover { background: #1d4ed8; }
-    ul { list-style: none; padding: 0; margin-top: 20px; }
-    li { background: white; padding: 12px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #ddd; }
-    .status { font-size: 13px; color: #666; margin-top: 8px; }
+    .status { font-size: 14px; margin-top: 12px; }
+    .success { color: #16a34a; }
     .error { color: #dc2626; }
   </style>
 </head>
 <body>
-  <h1>Messages (stored in a real database)</h1>
-  <p>Type something, save it, and see it come back from SQLite through your backend.</p>
+  <h1>Save a message</h1>
+  <p>Type something and click Save — it's stored as a file on the server. Nothing is shown back here.</p>
 
   <input type="text" id="msgInput" placeholder="Type a message...">
-  <button onclick="addMessage()">Save</button>
+  <button onclick="saveMessage()">Save</button>
   <div class="status" id="status"></div>
 
-  <ul id="messageList"></ul>
-
   <script>
-    // Step 3-5: fetch data from backend (which hits the DB) and update the DOM
-    async function loadMessages() {
-      const statusDiv = document.getElementById('status');
-      try {
-        const response = await fetch('/api/messages');
-        if (!response.ok) throw new Error(`Status ${response.status}`);
-        const messages = await response.json();
-
-        const list = document.getElementById('messageList');
-        list.innerHTML = '';
-        messages.forEach(msg => {
-          const li = document.createElement('li');
-          li.textContent = `${msg.text} — ${new Date(msg.created_at).toLocaleString()}`;
-          list.appendChild(li);
-        });
-        statusDiv.textContent = `Loaded ${messages.length} message(s) from the database.`;
-        statusDiv.className = 'status';
-      } catch (err) {
-        statusDiv.textContent = 'Error loading messages: ' + err.message;
-        statusDiv.className = 'status error';
-      }
-    }
-
-    // Step 1-2: user clicks, fetch() sends a POST request
-    async function addMessage() {
+    async function saveMessage() {
       const input = document.getElementById('msgInput');
+      const statusDiv = document.getElementById('status');
       const text = input.value.trim();
-      if (!text) return;
+
+      if (!text) {
+        statusDiv.textContent = 'Type something first.';
+        statusDiv.className = 'status error';
+        return;
+      }
 
       try {
         const response = await fetch('/api/messages', {
@@ -65,14 +44,13 @@
         if (!response.ok) throw new Error(`Status ${response.status}`);
 
         input.value = '';
-        await loadMessages(); // refresh the list after saving
+        statusDiv.textContent = 'Message saved.';
+        statusDiv.className = 'status success';
       } catch (err) {
-        document.getElementById('status').textContent = 'Error saving message: ' + err.message;
+        statusDiv.textContent = 'Error saving message: ' + err.message;
+        statusDiv.className = 'status error';
       }
     }
-
-    // Load existing messages when the page opens
-    window.addEventListener('DOMContentLoaded', loadMessages);
   </script>
 </body>
 </html>
