@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Messages</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 640px; margin: 60px auto; padding: 20px; background: #f8fafc; }
+    h1 { color: #0f172a; font-size: 22px; }
+    .status { font-size: 13px; color: #64748b; margin-bottom: 16px; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+    .text { font-size: 15px; color: #0f172a; }
+    .time { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+    .link { display: inline-block; margin-top: 20px; font-size: 13px; color: #6366f1; text-decoration: none; }
+    .error { color: #dc2626; }
+  </style>
+</head>
+<body>
+  <h1>Saved messages</h1>
+  <div class="status" id="status">Loading...</div>
+  <ul id="list"></ul>
+  <a class="link" href="/index.html">← Back to save a note</a>
+
+  <script>
+    async function loadMessages() {
+      const statusDiv = document.getElementById('status');
+      const list = document.getElementById('list');
+      try {
+        const response = await fetch('/api/messages');
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const messages = await response.json();
+
+        list.innerHTML = '';
+        messages.forEach(msg => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <div class="text">${escapeHtml(msg.text)}</div>
+            <div class="time">${new Date(msg.created_at).toLocaleString()}</div>
+          `;
+          list.appendChild(li);
+        });
+
+        statusDiv.textContent = `${messages.length} message(s) found.`;
+        statusDiv.className = 'status';
+      } catch (err) {
+        statusDiv.textContent = 'Error loading messages: ' + err.message;
+        statusDiv.className = 'status error';
+      }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    window.addEventListener('DOMContentLoaded', loadMessages);
+  </script>
+</body>
+</html>
